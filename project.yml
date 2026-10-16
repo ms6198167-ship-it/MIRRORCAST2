@@ -11,12 +11,14 @@ targets:
     type: application
     platform: iOS
     sources:
-      - AirPlayRoutePicker.swift
-      - HomeDashboard.swift
-      - MirrorCastApp.swift
-      - Receiver.swift
-      - ReceiverDetailsView.swift
-      - ReceiverDiscovery.swift
+      - path: .
+        includes:
+          - AirPlayRoutePicker.swift
+          - HomeDashboard.swift
+          - MirrorCastApp.swift
+          - Receiver.swift
+          - ReceiverDetailsView.swift
+          - ReceiverDiscovery.swift
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.example.MirrorCast
@@ -31,7 +33,9 @@ targets:
     type: app-extension
     platform: iOS
     sources:
-      - SampleHandler.swift
+      - path: .
+        includes:
+          - SampleHandler.swift
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.example.MirrorCast.Broadcast
