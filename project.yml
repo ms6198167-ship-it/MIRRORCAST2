@@ -10,20 +10,26 @@ targets:
   MirrorCast:
     type: application
     platform: iOS
+
     sources:
-      - path: .
-        includes:
-          - AirPlayRoutePicker.swift
-          - HomeDashboard.swift
-          - MirrorCastApp.swift
-          - Receiver.swift
-          - ReceiverDetailsView.swift
-          - ReceiverDiscovery.swift
+      - path: AirPlayRoutePicker.swift
+      - path: HomeDashboard.swift
+      - path: MirrorCastApp.swift
+      - path: Receiver.swift
+      - path: ReceiverDetailsView.swift
+      - path: ReceiverDiscovery.swift
+
+    dependencies:
+      - target: MirrorCastBroadcast
+        embed: true
+
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.example.MirrorCast
         SWIFT_VERSION: "5.0"
         TARGETED_DEVICE_FAMILY: "1,2"
+        CODE_SIGNING_ALLOWED: NO
+
     info:
       properties:
         NSLocalNetworkUsageDescription: "MirrorCast discovers receivers on your local network."
@@ -32,15 +38,17 @@ targets:
   MirrorCastBroadcast:
     type: app-extension
     platform: iOS
+
     sources:
-      - path: .
-        includes:
-          - SampleHandler.swift
+      - path: SampleHandler.swift
+
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.example.MirrorCast.Broadcast
         SWIFT_VERSION: "5.0"
         TARGETED_DEVICE_FAMILY: "1,2"
+        CODE_SIGNING_ALLOWED: NO
+
     info:
       properties:
         NSExtension:
