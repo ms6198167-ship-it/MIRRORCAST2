@@ -68,3 +68,8 @@ The automated tests exercise frame encoding/decoding, zero-length control packet
 3. Normalize audio to a documented PCM format, implement decoding/playback and timestamp-based A/V sync.
 4. Add bounded queues, congestion handling, reconnection, adaptive frame rate/quality, and integration tests.
 5. Implement separate receivers per platform and publish a compatibility matrix only after actual testing.
+
+
+## Cloud build from Windows
+
+See [`CLOUD_BUILD_SETUP.md`](../CLOUD_BUILD_SETUP.md). The repository now includes a starter `project.yml` and `codemagic.yaml`; the first workflow attempts an unsigned simulator build and must be validated using the actual cloud build logs.
