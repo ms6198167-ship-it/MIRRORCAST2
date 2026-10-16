@@ -42,10 +42,23 @@ workflows:
             exit 1
           fi
 
-      - name: Generate Xcode project
+
+      - name: Diagnose and generate Xcode project
         script: |
-          set -e
+          set -euxo pipefail
           cd "$CM_BUILD_DIR"
+
+          echo "===== XCODEGEN VERSION ====="
+          xcodegen version
+
+          echo "===== PROJECT FILE LOCATION ====="
+          ls -l "$CM_BUILD_DIR/project.yml"
+          realpath "$CM_BUILD_DIR/project.yml"
+
+          echo "===== PROJECT FILE CONTENTS ====="
+          cat -n "$CM_BUILD_DIR/project.yml"
+
+          echo "===== GENERATE PROJECT ====="
           xcodegen generate --spec "$CM_BUILD_DIR/project.yml"
 
       - name: Build app and Broadcast Upload Extension for iOS Simulator
