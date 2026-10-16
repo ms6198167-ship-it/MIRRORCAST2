@@ -1,1 +1,38 @@
-
+workflows:
+  mirrorcast-ios-simulator:
+    name: MirrorCast iOS Simulator Build (unsigned)
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    environment:
+      xcode: latest
+    scripts:
+      - name: Show build environment
+        script: |
+          set -e
+          xcodebuild -version
+          swift --version
+      - name: Install XcodeGen
+        script: |
+          set -e
+          brew install xcodegen
+      - name: Generate Xcode project
+        script: |
+          set -e
+          cd "$CM_BUILD_DIR"
+          xcodegen generate --spec project.yml
+      - name: Build app and Broadcast Upload Extension for iOS Simulator
+        script: |
+          set -o pipefail
+          cd "$CM_BUILD_DIR"
+          xcodebuild \
+            -project MirrorCast.xcodeproj \
+            -scheme MirrorCast \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            build | tee "$CM_BUILD_DIR/xcodebuild.log"
+    artifacts:
+      - "$CM_BUILD_DIR/xcodebuild.log"
+      - "$HOME/Library/Developer/Xcode/DerivedData/**/Build/Products/Debug-iphonesimulator/*.app"
+      - "$HOME/Library/Developer/Xcode/DerivedData/**/Build/Products/Debug-iphonesimulator/*.appex"
