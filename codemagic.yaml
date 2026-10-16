@@ -1,37 +1,66 @@
+
 workflows:
   mirrorcast-ios-simulator:
     name: MirrorCast iOS Simulator Build (unsigned)
     max_build_duration: 60
     instance_type: mac_mini_m2
+
     environment:
       xcode: latest
+
     scripts:
       - name: Show build environment
         script: |
           set -e
+          echo "=== Xcode version ==="
           xcodebuild -version
+          echo "=== Swift version ==="
           swift --version
+
       - name: Install XcodeGen
         script: |
           set -e
-          brew install xcodegen
+          if ! command -v xcodegen >/dev/null 2>&1; then
+            brew install xcodegen
+          fi
+          echo "=== XcodeGen version ==="
+          xcodegen version
+
+      - name: Check project files
+        script: |
+          set -e
+          cd "$CM_BUILD_DIR"
+          echo "=== Build directory ==="
+          pwd
+          echo "=== Repository files ==="
+          ls -la
+          echo "=== project.yml ==="
+          if [ -f project.yml ]; then
+            cat project.yml
+          else
+            echo "ERROR: project.yml was not found in the repository root."
+            exit 1
+          fi
+
       - name: Generate Xcode project
         script: |
           set -e
           cd "$CM_BUILD_DIR"
-          xcodegen generate --spec project.yml
+          xcodegen generate --spec "$CM_BUILD_DIR/project.yml"
+
       - name: Build app and Broadcast Upload Extension for iOS Simulator
         script: |
           set -o pipefail
           cd "$CM_BUILD_DIR"
           xcodebuild \
-            -project MirrorCast.xcodeproj \
+            -project "$CM_BUILD_DIR/MirrorCast.xcodeproj" \
             -scheme MirrorCast \
             -configuration Debug \
             -sdk iphonesimulator \
             -destination 'generic/platform=iOS Simulator' \
             CODE_SIGNING_ALLOWED=NO \
-            build | tee "$CM_BUILD_DIR/xcodebuild.log"
+            build 2>&1 | tee "$CM_BUILD_DIR/xcodebuild.log"
+
     artifacts:
       - "$CM_BUILD_DIR/xcodebuild.log"
       - "$HOME/Library/Developer/Xcode/DerivedData/**/Build/Products/Debug-iphonesimulator/*.app"
