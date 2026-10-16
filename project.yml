@@ -1,72 +1,48 @@
+
 name: MirrorCast
+
 options:
   bundleIdPrefix: com.example
   deploymentTarget:
     iOS: "16.0"
-  createIntermediateGroups: true
-  generateEmptyDirectories: true
-settings:
-  base:
-    SWIFT_VERSION: "5.0"
-    IPHONEOS_DEPLOYMENT_TARGET: "16.0"
-    TARGETED_DEVICE_FAMILY: "1"
-    CODE_SIGNING_ALLOWED: "NO"
-    GENERATE_INFOPLIST_FILE: "YES"
+
 targets:
   MirrorCast:
     type: application
     platform: iOS
     sources:
-      - path: MirrorCast/App
-      - path: MirrorCast/AirPlay
-      - path: MirrorCast/Discovery
-      - path: MirrorCast/Models
-      - path: MirrorCast/UI
-    info:
-      path: MirrorCast/Config/GeneratedApp-Info.plist
-      properties:
-        CFBundleDisplayName: MirrorCast
-        NSLocalNetworkUsageDescription: "MirrorCast connects to a receiver on your local network."
-        NSBonjourServices:
-          - "_mirrorcast._tcp"
-    entitlements:
-      path: MirrorCast/Config/AppGroup.entitlements
+      - path: MirrorCastApp.swift
+      - path: HomeDashboard.swift
+      - path: AirPlayRoutePicker.swift
+      - path: Receiver.swift
+      - path: ReceiverDiscovery.swift
+      - path: ReceiverDetailsView.swift
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.example.MirrorCast
-        PRODUCT_NAME: MirrorCast
-        INFOPLIST_KEY_UILaunchScreen_Generation: YES
-    dependencies:
-      - target: MirrorCastBroadcast
-        embed: true
+        SWIFT_VERSION: "5.0"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        CODE_SIGN_ENTITLEMENTS: AppGroup.entitlements
+    info:
+      properties:
+        NSLocalNetworkUsageDescription: "MirrorCast uses your local network to discover and connect to compatible receivers."
+        NSBonjourServices:
+          - "_mirrorcast._tcp"
+        UILaunchScreen: {}
+
   MirrorCastBroadcast:
     type: app-extension
     platform: iOS
     sources:
-      - path: MirrorCast/BroadcastExtension
-    info:
-      path: MirrorCast/Config/GeneratedBroadcast-Info.plist
-      properties:
-        CFBundleDisplayName: MirrorCast Broadcast
-        NSExtension:
-          NSExtensionPointIdentifier: com.apple.broadcast-services-upload
-          NSExtensionPrincipalClass: "$(PRODUCT_MODULE_NAME).SampleHandler"
-    entitlements:
-      path: MirrorCast/Config/AppGroup.entitlements
+      - path: SampleHandler.swift
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.example.MirrorCast.Broadcast
-        PRODUCT_NAME: MirrorCastBroadcast
-        SKIP_INSTALL: YES
-        APPLICATION_EXTENSION_API_ONLY: YES
-        INFOPLIST_KEY_NSHumanReadableCopyright: ""
-schemes:
-  MirrorCast:
-    build:
-      targets:
-        MirrorCast: all
-        MirrorCastBroadcast: all
-    run:
-      config: Debug
-    archive:
-      config: Release
+        SWIFT_VERSION: "5.0"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        CODE_SIGN_ENTITLEMENTS: AppGroup.entitlements
+    info:
+      properties:
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.broadcast-services-upload
+          NSExtensionPrincipalClass: "$(PRODUCT_MODULE_NAME).SampleHandler"
