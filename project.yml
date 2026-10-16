@@ -31,6 +31,7 @@ targets:
         CODE_SIGNING_ALLOWED: NO
 
     info:
+      path: Info.plist
       properties:
         NSLocalNetworkUsageDescription: "MirrorCast discovers receivers on your local network."
         UILaunchScreen: {}
@@ -50,6 +51,7 @@ targets:
         CODE_SIGNING_ALLOWED: NO
 
     info:
+      path: BroadcastInfo.plist
       properties:
         NSExtension:
           NSExtensionPointIdentifier: com.apple.broadcast-services-upload
